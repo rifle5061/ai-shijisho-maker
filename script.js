@@ -12,7 +12,8 @@ const presets = {
     structure: "導入 → 問題提起 → 体験談/具体例 → 解説 → 注意点 → まとめ",
     output: "HTML形式",
     seo: "SEO強め。タイトル案、見出し、関連キーワードを自然に入れる",
-    risk: "断定表現を避ける。体験談として書く。必要に応じてPR表記を入れる",
+    risk: "断定表現を避ける。体験談として書く",
+    prDisclosure: "yes",
     cta: "保存する / 自分でも確認する / 関連記事を見る",
     material: ""
   },
@@ -29,7 +30,8 @@ const presets = {
     structure: "問題提起 → 結論 → 一言補足 → URL誘導",
     output: "SNS投稿文を3パターン",
     seo: "ハッシュタグ候補も出す",
-    risk: "広告・PRの場合はPR表記を入れる",
+    risk: "広告の場合は誤解のない表現にする",
+    prDisclosure: "yes",
     cta: "記事を見る / 保存する / 詳細を読む",
     material: ""
   },
@@ -45,8 +47,9 @@ const presets = {
     emphasis: "対立ではなく、認識違い防止と根拠確認が目的",
     structure: "挨拶 → 背景 → 確認事項 → 回答依頼 → 締め",
     output: "そのまま送れる文章",
-    seo: "不要",
+    seo: "",
     risk: "言った言わないを避けるため、記録に残る文章にする",
+    prDisclosure: "no",
     cta: "内訳や根拠を文章で回答してもらう",
     material: ""
   },
@@ -63,92 +66,78 @@ const presets = {
     structure: "導入 → 商品概要 → メリット → デメリット → 比較 → おすすめな人 → まとめ",
     output: "HTML形式。比較表も入れる",
     seo: "商品名、口コミ、比較、メリット、デメリットを自然に入れる",
-    risk: "PR表記を入れる。価格や条件が変わる可能性を書く",
+    risk: "価格や条件が変わる可能性を書く",
+    prDisclosure: "yes",
     cta: "商品ページを見る / 比較記事を見る",
     material: ""
   }
 };
 
-const fieldIds = [
-  "purpose",
-  "writingType",
-  "platform",
-  "audience",
-  "tone",
-  "length",
-  "include",
-  "exclude",
-  "emphasis",
-  "structure",
-  "output",
-  "seo",
-  "risk",
-  "cta",
-  "material"
+const fields = [
+  { id: "purpose", label: "1 目的" },
+  { id: "writingType", label: "2 文章の種類" },
+  { id: "platform", label: "3 掲載先・使用先" },
+  { id: "audience", label: "4 読者・相手" },
+  { id: "tone", label: "5 文体・雰囲気" },
+  { id: "length", label: "6 文字数・長さ" },
+  { id: "include", label: "7 必ず入れる内容" },
+  { id: "exclude", label: "8 入れない内容" },
+  { id: "emphasis", label: "9 強調したいポイント" },
+  { id: "structure", label: "10 構成" },
+  { id: "output", label: "11 出力形式" },
+  { id: "seo", label: "12 SEO・検索対策" },
+  { id: "risk", label: "13 注意点・リスク配慮" },
+  { id: "prDisclosure", label: "14 PR表記" },
+  { id: "cta", label: "15 読者・相手にしてほしい行動" },
+  { id: "material", label: "16 元になる素材" }
 ];
 
-function getValue(id) {
-  return document.getElementById(id).value.trim();
+const inputIds = fields.map((field) => field.id);
+
+function valueOf(id) {
+  const element = document.getElementById(id);
+  return element ? element.value.trim() : "";
+}
+
+function prText(value) {
+  if (value === "yes") {
+    return "PR表記あり。広告・アフィリエイトを含む場合は、記事冒頭または広告前にPRであることを明記してください。料金・条件・キャンペーン内容は変わる可能性があるため、断定しすぎないでください。";
+  }
+  if (value === "no") {
+    return "PR表記なし。広告・アフィリエイト表現は入れないでください。";
+  }
+  return "";
 }
 
 function buildPrompt() {
-  const data = {};
-  fieldIds.forEach((id) => {
-    data[id] = getValue(id) || "未入力";
+  const sections = [];
+
+  fields.forEach((field) => {
+    let value = valueOf(field.id);
+
+    if (field.id === "prDisclosure") {
+      value = prText(value);
+    }
+
+    if (!value) return;
+
+    sections.push(`【${field.label}】\n${value}`);
   });
+
+  const body = sections.length
+    ? sections.join("\n\n")
+    : "【目的】\n入力内容に合う文章を作成してください。";
 
   return `あなたは文章作成と構成整理に強いプロのライターです。
 
 以下の条件に従って、目的に合う文章を作成してください。
 
-【1 目的】
-${data.purpose}
-
-【2 文章の種類】
-${data.writingType}
-
-【3 掲載先・使用先】
-${data.platform}
-
-【4 読者・相手】
-${data.audience}
-
-【5 文体・雰囲気】
-${data.tone}
-
-【6 文字数・長さ】
-${data.length}
-
-【7 必ず入れる内容】
-${data.include}
-
-【8 入れない内容】
-${data.exclude}
-
-【9 強調したいポイント】
-${data.emphasis}
-
-【10 構成】
-${data.structure}
-
-【11 出力形式】
-${data.output}
-
-【12 SEO・検索対策】
-${data.seo}
-
-【13 注意点・リスク配慮】
-${data.risk}
-
-【14 読者・相手にしてほしい行動】
-${data.cta}
-
-【15 元になる素材】
-${data.material}
+${body}
 
 【作成ルール】
 ・上記の条件を優先して作成してください。
-・不足情報がある場合は、勝手に断定せず、自然な範囲で補ってください。
+・入力されていない条件は、自然な範囲で補ってください。
+・ただし、具体的な数値・体験談・商品名・事実関係は勝手に作らないでください。
 ・事実と意見を混同しないでください。
 ・読みやすく、コピペして使いやすい形で出力してください。
 ・必要に応じて見出し、箇条書き、表を使ってください。`;
@@ -166,9 +155,7 @@ function focusNext(current) {
   const next = document.getElementById(nextId);
   if (next) {
     next.focus();
-    if (next.tagName === "TEXTAREA") {
-      next.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    next.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 }
 
@@ -184,13 +171,26 @@ document.querySelectorAll("textarea").forEach((textarea) => {
   });
 });
 
+document.querySelectorAll("select").forEach((select) => {
+  select.addEventListener("change", generatePrompt);
+
+  select.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      generatePrompt();
+      focusNext(select);
+    }
+  });
+});
+
 document.querySelectorAll("[data-preset]").forEach((button) => {
   button.addEventListener("click", () => {
     const key = button.dataset.preset;
     const preset = presets[key];
 
-    fieldIds.forEach((id) => {
-      document.getElementById(id).value = preset[id] || "";
+    inputIds.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) element.value = preset[id] || "";
     });
 
     generatePrompt();
@@ -199,9 +199,11 @@ document.querySelectorAll("[data-preset]").forEach((button) => {
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
-  fieldIds.forEach((id) => {
-    document.getElementById(id).value = "";
+  inputIds.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) element.value = "";
   });
+
   generatePrompt();
   document.getElementById("purpose").focus();
 });
@@ -216,6 +218,7 @@ document.getElementById("newlineBtn").addEventListener("click", () => {
   const start = material.selectionStart;
   const end = material.selectionEnd;
   const value = material.value;
+
   material.value = value.slice(0, start) + "\n" + value.slice(end);
   material.selectionStart = material.selectionEnd = start + 1;
   material.focus();
@@ -226,9 +229,7 @@ document.getElementById("copyBtn").addEventListener("click", async () => {
   const output = document.getElementById("promptOutput");
   const message = document.getElementById("copyMessage");
 
-  if (!output.value.trim()) {
-    generatePrompt();
-  }
+  if (!output.value.trim()) generatePrompt();
 
   try {
     await navigator.clipboard.writeText(output.value);

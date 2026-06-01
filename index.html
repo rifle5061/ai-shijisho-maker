@@ -29,8 +29,8 @@
         <p class="label">PROMPT MAKER</p>
         <h2>1項目ずつ入力</h2>
         <p>
-          スマホでも入力しやすいように、項目ごとに入力欄を分けています。
-          入力中に<strong>Enter</strong>を押すと次の項目へ移動します。
+          未入力の項目はプロンプトに反映しません。
+          スマホで入力中に<strong>Enter</strong>を押すと次の項目へ移動します。
         </p>
       </div>
 
@@ -187,12 +187,27 @@
                 <p>気をつけたいこと</p>
               </div>
             </div>
-            <textarea id="risk" data-next="cta" placeholder="例：PR表記を入れる / 断定しない / 個人情報を伏せる"></textarea>
+            <textarea id="risk" data-next="prDisclosure" placeholder="例：断定しない / 個人情報を伏せる / 投資リスクを書く"></textarea>
           </div>
 
           <div class="input-card">
             <div class="input-head">
               <span class="num">14</span>
+              <div>
+                <label for="prDisclosure">PR表記</label>
+                <p>広告・アフィリエイト表記を入れるか？</p>
+              </div>
+            </div>
+            <select id="prDisclosure" data-next="cta">
+              <option value="">選択しない</option>
+              <option value="yes">PR表記あり</option>
+              <option value="no">PR表記なし</option>
+            </select>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">15</span>
               <div>
                 <label for="cta">最後にしてほしい行動</label>
                 <p>読者・相手に何をしてほしいか？</p>
@@ -203,7 +218,7 @@
 
           <div class="input-card">
             <div class="input-head">
-              <span class="num">15</span>
+              <span class="num">16</span>
               <div>
                 <label for="material">元になる素材</label>
                 <p>AIに渡したいメモ・文章・URL</p>

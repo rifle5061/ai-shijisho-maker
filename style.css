@@ -224,10 +224,10 @@ label {
   font-size: 13px;
 }
 
-textarea {
+textarea,
+select {
   width: 100%;
-  min-height: 72px;
-  resize: vertical;
+  min-height: 52px;
   border: 1px solid #cbd5e1;
   border-radius: 16px;
   padding: 12px;
@@ -238,7 +238,17 @@ textarea {
   outline: none;
 }
 
-textarea:focus {
+textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+select {
+  appearance: none;
+}
+
+textarea:focus,
+select:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 4px rgba(99,102,241,.12);
 }
