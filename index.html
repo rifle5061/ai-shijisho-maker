@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI指示書メーカー｜コピペ用プロンプト生成ツール</title>
+  <meta name="description" content="目的・文章の種類・読者・文体などを入力するだけで、ChatGPTやGeminiに貼れるAI指示書を作成できる無料ツールです。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="badge">AIなしで動くプロンプト生成ツール</p>
+      <h1>AI指示書メーカー</h1>
+      <p class="lead">
+        項目を1つずつ入力するだけで、ChatGPTやGeminiに貼れる
+        <strong>高精度プロンプト</strong>を作成できます。
+      </p>
+      <div class="hero-buttons">
+        <a href="#maker" class="btn primary">今すぐ作る</a>
+        <a href="#howto" class="btn ghost">使い方を見る</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="maker" class="section">
+      <div class="section-title">
+        <p class="label">PROMPT MAKER</p>
+        <h2>1項目ずつ入力</h2>
+        <p>
+          スマホでも入力しやすいように、項目ごとに入力欄を分けています。
+          入力中に<strong>Enter</strong>を押すと次の項目へ移動します。
+        </p>
+      </div>
+
+      <div class="preset-box">
+        <p class="preset-title">用途テンプレート</p>
+        <div class="preset-buttons">
+          <button type="button" data-preset="blog">ブログ記事</button>
+          <button type="button" data-preset="sns">SNS投稿</button>
+          <button type="button" data-preset="inquiry">問い合わせ文</button>
+          <button type="button" data-preset="product">商品紹介</button>
+          <button type="button" id="resetBtn" class="reset">リセット</button>
+        </div>
+      </div>
+
+      <div class="maker-grid">
+        <form id="promptForm" class="form-card">
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">1</span>
+              <div>
+                <label for="purpose">目的</label>
+                <p>何を作りたいか？</p>
+              </div>
+            </div>
+            <textarea id="purpose" data-next="writingType" placeholder="例：SEO記事を書きたい / 問い合わせ文を作りたい"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">2</span>
+              <div>
+                <label for="writingType">文章の種類</label>
+                <p>何の文章か？</p>
+              </div>
+            </div>
+            <textarea id="writingType" data-next="platform" placeholder="例：ブログ記事 / X投稿 / メール / LP / 商品紹介"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">3</span>
+              <div>
+                <label for="platform">掲載先・使用先</label>
+                <p>どこで使う文章か？</p>
+              </div>
+            </div>
+            <textarea id="platform" data-next="audience" placeholder="例：はてなブログ / WordPress / X / Instagram / メール"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">4</span>
+              <div>
+                <label for="audience">読者・相手</label>
+                <p>誰に向けた文章か？</p>
+              </div>
+            </div>
+            <textarea id="audience" data-next="tone" placeholder="例：初心者 / 会社員 / 購入検討者 / 取引先"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">5</span>
+              <div>
+                <label for="tone">文体・雰囲気</label>
+                <p>どんな感じで書くか？</p>
+              </div>
+            </div>
+            <textarea id="tone" data-next="length" placeholder="例：丁寧 / やわらかく / SEO向け / 体験談風"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">6</span>
+              <div>
+                <label for="length">文字数・長さ</label>
+                <p>どれくらいの長さか？</p>
+              </div>
+            </div>
+            <textarea id="length" data-next="include" placeholder="例：300文字 / 1500文字 / 3000文字 / 短め / 詳しめ"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">7</span>
+              <div>
+                <label for="include">入れたい内容</label>
+                <p>必ず入れてほしい情報</p>
+              </div>
+            </div>
+            <textarea id="include" data-next="exclude" placeholder="例：金額 / 日付 / 商品名 / 体験談 / 注意点 / URL"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">8</span>
+              <div>
+                <label for="exclude">入れたくない内容</label>
+                <p>書かないでほしいこと</p>
+              </div>
+            </div>
+            <textarea id="exclude" data-next="emphasis" placeholder="例：会社名を出さない / 断定しない / 煽りすぎない"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">9</span>
+              <div>
+                <label for="emphasis">強調したいポイント</label>
+                <p>一番伝えたいこと</p>
+              </div>
+            </div>
+            <textarea id="emphasis" data-next="structure" placeholder="例：安くなった / 失敗回避 / 初心者でも分かる"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">10</span>
+              <div>
+                <label for="structure">構成</label>
+                <p>どんな流れで作るか？</p>
+              </div>
+            </div>
+            <textarea id="structure" data-next="output" placeholder="例：導入 → 問題提起 → 具体例 → 注意点 → まとめ"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">11</span>
+              <div>
+                <label for="output">出力形式</label>
+                <p>どんな形で出すか？</p>
+              </div>
+            </div>
+            <textarea id="output" data-next="seo" placeholder="例：HTML / Markdown / 箇条書き / 表 / メール文"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">12</span>
+              <div>
+                <label for="seo">SEO・検索対策</label>
+                <p>SEOを意識するか？</p>
+              </div>
+            </div>
+            <textarea id="seo" data-next="risk" placeholder="例：SEO強め / タイトル案も欲しい / 見出しも欲しい"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">13</span>
+              <div>
+                <label for="risk">注意点・リスク配慮</label>
+                <p>気をつけたいこと</p>
+              </div>
+            </div>
+            <textarea id="risk" data-next="cta" placeholder="例：PR表記を入れる / 断定しない / 個人情報を伏せる"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">14</span>
+              <div>
+                <label for="cta">最後にしてほしい行動</label>
+                <p>読者・相手に何をしてほしいか？</p>
+              </div>
+            </div>
+            <textarea id="cta" data-next="material" placeholder="例：保存する / 商品を見る / 問い合わせる / 自分で確認する"></textarea>
+          </div>
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">15</span>
+              <div>
+                <label for="material">元になる素材</label>
+                <p>AIに渡したいメモ・文章・URL</p>
+              </div>
+            </div>
+            <textarea id="material" data-next="promptOutput" class="large" placeholder="ここに元になるメモや箇条書きを貼ってください。Enterで生成結果へ移動します。改行したい場合は「改行を追加」ボタンを使えます。"></textarea>
+            <button type="button" id="newlineBtn" class="small-btn">この欄に改行を追加</button>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="generateBtn" class="btn primary full">プロンプトを生成</button>
+          </div>
+        </form>
+
+        <aside class="output-card">
+          <div class="output-head">
+            <div>
+              <p class="label">OUTPUT</p>
+              <h2>生成プロンプト</h2>
+            </div>
+            <button type="button" id="copyBtn" class="copy-btn">コピー</button>
+          </div>
+          <textarea id="promptOutput" readonly placeholder="ここにプロンプトが自動生成されます。"></textarea>
+          <p id="copyMessage" class="copy-message"></p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="howto" class="section dark">
+      <div class="section-title">
+        <p class="label">HOW TO USE</p>
+        <h2>使い方は3ステップ</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><span>01</span><h3>項目を入力</h3><p>目的・文章の種類・読者などを1つずつ入力します。</p></div>
+        <div class="step"><span>02</span><h3>プロンプト生成</h3><p>入力内容をもとに、AIへ渡す指示書を自動生成します。</p></div>
+        <div class="step"><span>03</span><h3>AIに貼る</h3><p>コピーしてChatGPTやGeminiに貼り付けるだけです。</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>AI指示書メーカー｜無料プロンプト生成ツール</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
