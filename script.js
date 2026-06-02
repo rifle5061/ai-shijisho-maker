@@ -13,9 +13,9 @@ const presets = {
     output: "HTML形式",
     seo: "SEO強め。タイトル案、見出し、関連キーワードを自然に入れる",
     risk: "断定表現を避ける。体験談として書く",
-    prDisclosure: "yes",
     cta: "保存する / 自分でも確認する / 関連記事を見る",
-    material: ""
+    material: "",
+    prDisclosure: "yes"
   },
   sns: {
     purpose: "ブログ記事や商品をSNSで宣伝したい",
@@ -31,9 +31,9 @@ const presets = {
     output: "SNS投稿文を3パターン",
     seo: "ハッシュタグ候補も出す",
     risk: "広告の場合は誤解のない表現にする",
-    prDisclosure: "yes",
     cta: "記事を見る / 保存する / 詳細を読む",
-    material: ""
+    material: "",
+    prDisclosure: "yes"
   },
   inquiry: {
     purpose: "相手に確認したいことを、感情的に見えない文章にしたい",
@@ -49,9 +49,9 @@ const presets = {
     output: "そのまま送れる文章",
     seo: "",
     risk: "言った言わないを避けるため、記録に残る文章にする",
-    prDisclosure: "no",
     cta: "内訳や根拠を文章で回答してもらう",
-    material: ""
+    material: "",
+    prDisclosure: "no"
   },
   product: {
     purpose: "商品紹介記事や比較記事を作りたい",
@@ -67,9 +67,9 @@ const presets = {
     output: "HTML形式。比較表も入れる",
     seo: "商品名、口コミ、比較、メリット、デメリットを自然に入れる",
     risk: "価格や条件が変わる可能性を書く",
-    prDisclosure: "yes",
     cta: "商品ページを見る / 比較記事を見る",
-    material: ""
+    material: "",
+    prDisclosure: "yes"
   }
 };
 
@@ -87,16 +87,17 @@ const fields = [
   { id: "output", label: "11 出力形式" },
   { id: "seo", label: "12 SEO・検索対策" },
   { id: "risk", label: "13 注意点・リスク配慮" },
-  { id: "prDisclosure", label: "14 PR表記" },
-  { id: "cta", label: "15 読者・相手にしてほしい行動" },
-  { id: "material", label: "16 元になる素材" }
+  { id: "cta", label: "14 読者・相手にしてほしい行動" },
+  { id: "material", label: "15 元になる素材" },
+  { id: "prDisclosure", label: "16 PR表記" }
 ];
 
 const inputIds = fields.map((field) => field.id);
 
 function valueOf(id) {
   const element = document.getElementById(id);
-  return element ? element.value.trim() : "";
+  if (!element) return "";
+  return element.value.trim();
 }
 
 function prText(value) {
@@ -119,20 +120,25 @@ function buildPrompt() {
       value = prText(value);
     }
 
+    // Important: blank fields are skipped completely.
     if (!value) return;
 
     sections.push(`【${field.label}】\n${value}`);
   });
 
-  const body = sections.length
-    ? sections.join("\n\n")
-    : "【目的】\n入力内容に合う文章を作成してください。";
+  const conditionBlock = sections.join("\n\n");
+
+  if (!conditionBlock) {
+    return `あなたは文章作成と構成整理に強いプロのライターです。
+
+条件が入力されていないため、作成したい内容を入力してください。`;
+  }
 
   return `あなたは文章作成と構成整理に強いプロのライターです。
 
 以下の条件に従って、目的に合う文章を作成してください。
 
-${body}
+${conditionBlock}
 
 【作成ルール】
 ・上記の条件を優先して作成してください。
@@ -145,6 +151,7 @@ ${body}
 
 function generatePrompt() {
   const output = document.getElementById("promptOutput");
+  if (!output) return;
   output.value = buildPrompt();
 }
 
@@ -194,7 +201,8 @@ document.querySelectorAll("[data-preset]").forEach((button) => {
     });
 
     generatePrompt();
-    document.getElementById("purpose").focus();
+    const first = document.getElementById("purpose");
+    if (first) first.focus();
   });
 });
 
@@ -205,7 +213,8 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   });
 
   generatePrompt();
-  document.getElementById("purpose").focus();
+  const first = document.getElementById("purpose");
+  if (first) first.focus();
 });
 
 document.getElementById("generateBtn").addEventListener("click", () => {

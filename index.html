@@ -187,27 +187,11 @@
                 <p>気をつけたいこと</p>
               </div>
             </div>
-            <textarea id="risk" data-next="prDisclosure" placeholder="例：断定しない / 個人情報を伏せる / 投資リスクを書く"></textarea>
+            <textarea id="risk" data-next="cta" placeholder="例：断定しない / 個人情報を伏せる / 投資リスクを書く"></textarea>
           </div>
-
-          <div class="input-card">
+<div class="input-card">
             <div class="input-head">
               <span class="num">14</span>
-              <div>
-                <label for="prDisclosure">PR表記</label>
-                <p>広告・アフィリエイト表記を入れるか？</p>
-              </div>
-            </div>
-            <select id="prDisclosure" data-next="cta">
-              <option value="">選択しない</option>
-              <option value="yes">PR表記あり</option>
-              <option value="no">PR表記なし</option>
-            </select>
-          </div>
-
-          <div class="input-card">
-            <div class="input-head">
-              <span class="num">15</span>
               <div>
                 <label for="cta">最後にしてほしい行動</label>
                 <p>読者・相手に何をしてほしいか？</p>
@@ -218,15 +202,33 @@
 
           <div class="input-card">
             <div class="input-head">
-              <span class="num">16</span>
+              <span class="num">15</span>
               <div>
                 <label for="material">元になる素材</label>
                 <p>AIに渡したいメモ・文章・URL</p>
               </div>
             </div>
-            <textarea id="material" data-next="promptOutput" class="large" placeholder="ここに元になるメモや箇条書きを貼ってください。Enterで生成結果へ移動します。改行したい場合は「改行を追加」ボタンを使えます。"></textarea>
+            <textarea id="material" data-next="prDisclosure" class="large" placeholder="ここに元になるメモや箇条書きを貼ってください。Enterで生成結果へ移動します。改行したい場合は「改行を追加」ボタンを使えます。"></textarea>
             <button type="button" id="newlineBtn" class="small-btn">この欄に改行を追加</button>
           </div>
+
+
+          <div class="input-card">
+            <div class="input-head">
+              <span class="num">16</span>
+              <div>
+                <label for="prDisclosure">PR表記</label>
+                <p>広告・アフィリエイト表記を入れるか？</p>
+              </div>
+            </div>
+            <select id="prDisclosure" data-next="promptOutput">
+              <option value="">選択しない</option>
+              <option value="yes">PR表記あり</option>
+              <option value="no">PR表記なし</option>
+            </select>
+          </div>
+
+          
 
           <div class="form-actions">
             <button type="button" id="generateBtn" class="btn primary full">プロンプトを生成</button>
@@ -261,9 +263,9 @@
   </main>
 
   <footer>
-    <p>AI指示書メーカー｜無料プロンプト生成ツール</p>
+    <p>AI指示書メーカー｜無料プロンプト生成ツール v4</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
